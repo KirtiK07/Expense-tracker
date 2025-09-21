@@ -1,0 +1,18 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'expenses/style.css' %}">
+    <title>Delete Expense</title>
+</head>
+<body>
+<div class="container">
+    <h1>Are you sure you want to delete "{{ expense.title }}"?</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn">Yes, Delete</button>
+    </form>
+    <a href="{% url 'expense_list' %}" class="btn">Cancel</a>
+</div>
+</body>
+</html>

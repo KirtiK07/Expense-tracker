@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Monthly Expenses</title>
+    <link rel="stylesheet" href="{% static 'expenses/style.css' %}">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+        table th, table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        table th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+        canvas {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Monthly Expenses</h1>
+    <a href="{% url 'expense_list' %}" class="btn">Back to Expenses</a>
+
+    <!-- Chart Canvas -->
+    <canvas id="monthlyChart"></canvas>
+
+    <!-- Month-wise Table -->
+    <table>
+        <tr>
+            <th>Month</th>
+            <th>Total Expense</th>
+        </tr>
+        {% for item in monthly_data %}
+        <tr>
+            <td>{{ item.month|date:"F Y" }}</td>
+            <td>{{ item.total }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="2">No expenses yet.</td></tr>
+        {% endfor %}
+    </table>
+</div>
+
+<!-- Chart.js Initialization -->
+<script>
+var ctx = document.getElementById('monthlyChart').getContext('2d');
+var chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: [{% for item in monthly_data %}'{{ item.month|date:"F Y" }}',{% endfor %}],
+        datasets: [{
+            label: 'Total Expenses',
+            data: [{% for item in monthly_data %}{{ item.total }},{% endfor %}],
+            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { position: 'top' },
+            title: { display: true, text: 'Expenses Month-wise' }
+        },
+        scales: {
+            y: { beginAtZero: true }
+        }
+    }
+});
+</script>
+</body>
+</html>

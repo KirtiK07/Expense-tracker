@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'expenses/style.css' %}">
+    <title>Add/Edit Expense</title>
+</head>
+<body>
+<div class="container">
+    <h1>Add/Edit Expense</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn">Save</button>
+    </form>
+    <a href="{% url 'expense_list' %}" class="btn">Back</a>
+</div>
+</body>
+</html>
